@@ -19,6 +19,11 @@ module.exports.loop = function () {
         tower.defend();
     }
 
+    var link_sender  = Game.getObjectById('5dbfc4283dd92f665a2443c2');
+    var link_receiver = Game.getObjectById('5dbfc25b4f6cbc4090af17bb');
+    if(link_sender.cooldown === 0 && link_receiver.energy < link_receiver.energyCapacity){
+        link_sender.transferEnergy(link_receiver);
+    }
     // spawn control !
     Game.spawns['Spawn1'].spawnControl();
 

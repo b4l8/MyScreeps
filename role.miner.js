@@ -1,21 +1,33 @@
 var roleMiner = {
     run: function(creep) {
-        let source = Game.getObjectById(creep.memory.sourceId);
-
-        let container = source.pos.findInRange(FIND_STRUCTURES,1,{
-            filter: s => s.structureType == STRUCTURE_CONTAINER
+        var source = Game.getObjectById(creep.memory.sourceId);
+        let linker = source.pos.findInRange(FIND_STRUCTURES,1,{
+            filter: s => s.structureType === STRUCTURE_LINK
         })[0];
-        if(!container) {
-            creep.say('no container');
-            return;
+        let fill_linker = false;
+
+        if(linker && linker.energy< linker.energyCapacity){
+            fill_linker = true;
         }
 
-        // same position
-        if(creep.pos.isEqualTo(container.pos)){
-            creep.harvest(source);
-        }
-        else {
-            creep.moveTo(container);
+        if(fill_linker && creep.carry.energy === creep.carryCapacity){
+            creep.transfer(linker, RESOURCE_ENERGY);
+        } else {
+            let container = source.pos.findInRange(FIND_STRUCTURES,1,{
+                filter: s => s.structureType == STRUCTURE_CONTAINER
+            })[0];
+            if(!container) {
+                creep.say('no container');
+                return;
+            }
+            // same position
+            if(creep.pos.isEqualTo(container.pos)){
+                creep.harvest(source);
+            }
+            else {
+                creep.say('Container!');
+                creep.moveTo(container);
+            }
         }
     }
 };

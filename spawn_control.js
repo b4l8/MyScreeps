@@ -1,4 +1,15 @@
-var list_of_roles = ['harvester','upgrader','repairer','builder','miner','lorry','wallkeeper','traveler','archer'];
+var list_of_roles = ['harvester',
+    'filler',
+    'upgrader',
+    'repairer',
+    'builder',
+    'miner',
+    'lorry',
+    'wallkeeper',
+    'traveler',
+    'archer'
+];
+
 var min_role_list = {
     'harvester':0,
     'upgrader':1,
@@ -8,7 +19,8 @@ var min_role_list = {
     'lorry' : 0,
     'wallkeeper':1,
     'traveler':0,
-    'archer':0
+    'archer':0,
+    'filler':1,
 };
 
 StructureSpawn.prototype.spawnControl =
@@ -38,7 +50,7 @@ StructureSpawn.prototype.spawnControl =
                 if(num_of_creeps['harvester'] === 0) {
                     lorry_size = room.energyAvailable;
                 }
-                name = this.createLorry(lorry_size);
+                name = this.createLorry(lorry_size,'lorry');
             }
             else {
                 name = this.createMyCreep(room.energyAvailable, 'harvester');
@@ -65,11 +77,18 @@ StructureSpawn.prototype.spawnControl =
                 for (let role of list_of_roles) {
                     if (num_of_creeps[role] < min_role_list[role]) {
                         if(role === 'traveler'){
+                            if(num_of_creeps[role] === 0){
+                                max_energy/=2;
+                            }
                             name = this.createTraveler(max_energy,4,'E25S7','E25S8','5bbcae649099fc012e638ef3');
                         } else if(role === 'archer'){
                             name = this.createArcher(max_energy, role);
-                        }
-                        else{
+                        } else if (role === 'filler'){
+                            name = this.createLorry(600, role);
+                        } else{
+                            if(num_of_creeps[role] === 0){
+                                max_energy/=2;
+                            }
                             name = this.createMyCreep(max_energy, role);
                         }
                         break;
@@ -109,12 +128,12 @@ StructureSpawn.prototype.createMyCreep =
 StructureSpawn.prototype.createMiner =
     function(sourceId) {
         // create creep with the created body and the given role
-        return this.createCreep([WORK, WORK, WORK, WORK, WORK, MOVE], undefined, { role: 'miner', sourceId:sourceId,
+        return this.createCreep([WORK, WORK, WORK, WORK, WORK, CARRY,MOVE], undefined, { role: 'miner', sourceId:sourceId,
             home: this.room.name});
     };
 
 StructureSpawn.prototype.createLorry =
-    function(energy) {
+    function(energy,role) {
         // create a body with twice as many CARRY as MOVE parts
         var numberOfParts = Math.floor(energy / 150);
         // make sure the creep is not too big (more than 50 parts)
@@ -128,7 +147,7 @@ StructureSpawn.prototype.createLorry =
         }
 
         // create creep with the created body and the role 'lorry'
-        return this.createCreep(body, undefined, { role: 'lorry', working: false });
+        return this.createCreep(body, undefined, { role: role, working: false });
     };
 
 StructureSpawn.prototype.createTraveler =

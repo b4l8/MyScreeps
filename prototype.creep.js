@@ -7,7 +7,8 @@ var roles = {
     miner:require('role.miner'),
     wallkeeper: require('role.wallKeeper'),
     traveler: require('role.traveler'),
-    archer:require('role.archer')
+    archer:require('role.archer'),
+    filler:require('role.filler')
 };
 
 Creep.prototype.runRole = function() {
