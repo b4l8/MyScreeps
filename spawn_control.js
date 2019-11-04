@@ -7,7 +7,8 @@ var list_of_roles = ['harvester',
     'lorry',
     'wallkeeper',
     'traveler',
-    'archer'
+    'archer',
+    'claimer'
 ];
 
 var min_role_list = {
@@ -18,9 +19,10 @@ var min_role_list = {
     'miner' : 0,
     'lorry' : 0,
     'wallkeeper':1,
-    'traveler':0,
+    'traveler':1,
     'archer':0,
     'filler':1,
+    'claimer':0
 };
 
 StructureSpawn.prototype.spawnControl =
@@ -75,13 +77,18 @@ StructureSpawn.prototype.spawnControl =
 
             if (!name) {
                 for (let role of list_of_roles) {
-                    if (num_of_creeps[role] < min_role_list[role]) {
-                        if(role === 'traveler'){
-                            if(num_of_creeps[role] === 0){
-                                max_energy/=2;
+
+                    if(role === 'claimer' && this.memory.claimRoom !== undefined) {
+                        if(this.createClaimer(this.memory.claimRoom)){
+                            if(name !== undefined && _.isString(name)){
+                                delete this.memory.claimRoom;
                             }
-                            name = this.createTraveler(max_energy,4,'E25S7','E25S8','5bbcae649099fc012e638ef3');
-                        } else if(role === 'archer'){
+                        }
+                    }
+
+
+                    if (num_of_creeps[role] < min_role_list[role]) {
+                         if(role === 'archer'){
                             name = this.createArcher(max_energy, role);
                         } else if (role === 'filler'){
                             name = this.createLorry(600, role);
@@ -96,6 +103,19 @@ StructureSpawn.prototype.spawnControl =
                 }
             }
         }
+
+
+        // if none of the above caused a spawn spawn traveler
+        /** @type {Object.<string, number>} */
+        let num_of_traveler =  _.sum(Game.creeps, (c) => c.memory.role == 'traveler');
+
+        if (num_of_traveler < min_role_list['traveler']) {
+            if(num_of_traveler === 0) {
+                max_energy/=2;
+            }
+            name = this.createTraveler(max_energy,4,'E25S7','E25S8','5bbcae649099fc012e638ef3');
+        }
+
         if (name != undefined && _.isString(name)) {
             console.log(this.name + " spawned new creep: " + name + " (" + Game.creeps[name].memory.role + ")");
             for (let role of list_of_roles) {
@@ -200,4 +220,9 @@ StructureSpawn.prototype.createArcher =
 
         // create creep with the created body and the role 'lorry'
         return this.createCreep(body, undefined, { role: 'archer', working: false });
+    };
+
+StructureSpawn.prototype.createClaimer =
+    function(target) {
+    return this.createCreep([CLAIM, MOVE], undefined, { role: 'claimer', target: target });
     };

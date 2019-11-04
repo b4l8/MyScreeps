@@ -39,11 +39,10 @@ var roleTraveler = {
       } else {
           // harvest source
           if (creep.room.name === creep.memory.target) {
-              console.log("travel to source ");
-              var source = creep.room.find(FIND_SOURCES)[creep.memory.sourceIndex];
+
+              var source = Game.getObjectById(creep.memory.sourceIndex);
               // try to harvest energy, if the source is not in range
               if (creep.harvest(source) === ERR_NOT_IN_RANGE) {
-                  creep.move(RIGHT);
                   creep.moveTo(source);
               }
           }

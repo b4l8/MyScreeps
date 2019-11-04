@@ -9,7 +9,7 @@ module.exports.loop = function () {
             delete Memory.creeps[name];
             console.log('Clearing non-existing creep memory:', name);
         } else {
-            Game.creeps[name].memory.home = 'E25S7';
+            //Game.creeps[name].memory.home = 'E25S7';
             Game.creeps[name].runRole();
         }
     }
@@ -24,7 +24,10 @@ module.exports.loop = function () {
     if(link_sender.cooldown === 0 && link_receiver.energy < link_receiver.energyCapacity){
         link_sender.transferEnergy(link_receiver);
     }
-    // spawn control !
-    Game.spawns['Spawn1'].spawnControl();
+
+    // for each spawn
+    for (let spawnName in Game.spawns) {
+        Game.spawns['Spawn1'].spawnControl();
+    }
 
 };

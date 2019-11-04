@@ -8,7 +8,8 @@ var roles = {
     wallkeeper: require('role.wallKeeper'),
     traveler: require('role.traveler'),
     archer:require('role.archer'),
-    filler:require('role.filler')
+    filler:require('role.filler'),
+    claimer:require('role.claimer')
 };
 
 Creep.prototype.runRole = function() {
