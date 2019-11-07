@@ -6,7 +6,7 @@ var roleMiner = {
         })[0];
         let fill_linker = false;
 
-        if(linker && linker.energy< linker.energyCapacity){
+        if(linker && linker.store.getFreeCapacity(RESOURCE_ENERGY)>0){
             fill_linker = true;
         }
 
@@ -26,7 +26,7 @@ var roleMiner = {
             }
             else {
                 creep.say('Container!');
-                creep.moveTo(container);
+                creep.moveTo(container,{reusePath:50});
             }
         }
     }

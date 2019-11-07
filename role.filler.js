@@ -1,5 +1,3 @@
-var roleLorry = require('role.lorry');
-
 var roleFiller = {
     run: function(creep) {
         // state shift
@@ -23,9 +21,9 @@ var roleFiller = {
             }
 
             if(target) {
-                creep.say("transfer")
+                creep.say("transfer");
                 if(creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'},reusePath:50});
                 }
             }
         }
@@ -35,7 +33,7 @@ var roleFiller = {
 
             if(link_receiver) {
                 if(creep.withdraw(link_receiver,RESOURCE_ENERGY) === ERR_NOT_IN_RANGE){
-                    creep.moveTo(link_receiver);
+                    creep.moveTo(link_receiver,{reusePath:50});
                 }
             }
         }

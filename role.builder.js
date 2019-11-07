@@ -14,16 +14,27 @@ var roleBuilder = {
         // }
 
 
-        if(creep.memory.working && creep.store[RESOURCE_ENERGY] == 0) {
+        if(creep.memory.working && creep.store[RESOURCE_ENERGY] === 0) {
             creep.memory.working = false;
             creep.say('🔄 harvest');
         }
-        if(!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+        if(!creep.memory.working && creep.store.getFreeCapacity(RESOURCE_ENERGY) === 0) {
             creep.memory.working = true;
             creep.say('🚧 build');
         }
 
         if(creep.memory.working) {
+            // var sup_builders = Game.rooms['E25S8'].find(FIND_MY_CREEPS,{
+            // filter: s=>{return s.memory.role === 'builder';} });
+
+            // if(sup_builders.length ===0&&creep.room.name!=='E25S8'){
+            //   let exit=creep.room.findExitTo('E25S8');
+            //  creep.moveTo(creep.pos.findClosestByPath(exit));
+            //   creep.say('sup,sup');
+            //  console.log('suppoting neighbor');
+            // return;
+            // }
+
             var target = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES,{
                 filter: (s) => {
                     return  s.structureType !== STRUCTURE_WALL
@@ -36,7 +47,7 @@ var roleBuilder = {
             }
             if(target) {
                 if(creep.build(target) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'},reusePath: 10 });
                 }
             }
             else {

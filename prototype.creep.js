@@ -23,26 +23,27 @@ Creep.prototype.runRole = function() {
 Creep.prototype.getEnergy = function(useContainer,useSource) {
     /** @type {StructureContainer} **/
     let container;
-    if(this.getActiveBodyparts(CARRY)){
-        let dropps = this.room.find(FIND_DROPPED_RESOURCES, {
-                    filter: (d) => d.amount >= 100
-                });
-        if(dropps.length){
-            if(this.pickup(dropps[0])=== ERR_NOT_IN_RANGE){
-                this.moveTo(dropps[0]);
-            }
-            return;
-        }
-    }
+    // if(this.getActiveBodyparts(CARRY)){
+    //     let dropps = this.room.find(FIND_DROPPED_RESOURCES, {
+    //                 filter: (d) => d.amount >= 50 && d.resourceType === RESOURCE_ENERGY
+    //             });
+    //     if(dropps.length){
+    //         if(this.pickup(dropps[0])=== ERR_NOT_IN_RANGE){
+    //             this.moveTo(dropps[0]);
+    //         }
+    //         return;
+    //     }
+    // }
 
     if(useContainer) {
         container = this.pos.findClosestByPath(FIND_STRUCTURES,{
-            filter: s => (s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE) && s.store[RESOURCE_ENERGY] >150
+            filter: s => (s.structureType === STRUCTURE_CONTAINER || s.structureType === STRUCTURE_STORAGE ||
+            s.structureType === STRUCTURE_LINK) && s.store[RESOURCE_ENERGY] > this.store.getFreeCapacity(RESOURCE_ENERGY)/2
         });
 
         if(container !== undefined) {
             if(this.withdraw(container,RESOURCE_ENERGY) === ERR_NOT_IN_RANGE){
-                this.moveTo(container);
+                this.moveTo(container,{reusePath:10});
             }
         }
     }
@@ -51,7 +52,7 @@ Creep.prototype.getEnergy = function(useContainer,useSource) {
         var source = this.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
 
         if(this.harvest(source) == ERR_NOT_IN_RANGE) {
-            this.moveTo(source);
+            this.moveTo(source,{reusePath:10});
         }
     }
 };

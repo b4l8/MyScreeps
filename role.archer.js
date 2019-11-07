@@ -5,7 +5,7 @@ var roleArcher = {
           creep.memory.working = false;
           creep.say('🔄 harvest');
       }
-      if(!creep.memory.working && creep.store.getFreeCapacity() == 0) {
+      if(!creep.memory.working && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
           creep.memory.working = true;
       }
 

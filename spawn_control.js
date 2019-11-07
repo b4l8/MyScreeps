@@ -19,9 +19,9 @@ var min_role_list = {
     'miner' : 0,
     'lorry' : 0,
     'wallkeeper':1,
-    'traveler':1,
+    'traveler':0,
     'archer':0,
-    'filler':1,
+    'filler':0,
     'claimer':0
 };
 
@@ -60,6 +60,7 @@ StructureSpawn.prototype.spawnControl =
         } else {
             let sources = room.find(FIND_SOURCES);
             for(let s of sources) {
+                if(room.energyCapacityAvailablenumber <600) break;
                 // no miner for this source
                 if(!_.some(creeps_in_room,c => c.memory.role === 'miner' && c.memory.sourceId === s.id)){
                     /** @type {Array.StructureContainer} */
@@ -86,12 +87,17 @@ StructureSpawn.prototype.spawnControl =
                         }
                     }
 
+                    let linker_near_spawn = this.pos.findInRange(FIND_STRUCTURES,5,{
+                        filter: (s)=> s.structureType === STRUCTURE_LINK
+                    });
+                    if(linker_near_spawn.length > 0 && num_of_creeps['filler'] < 1){
+                        name = this.createLorry(600, 'filler');
+                    }
+
 
                     if (num_of_creeps[role] < min_role_list[role]) {
                          if(role === 'archer'){
                             name = this.createArcher(max_energy, role);
-                        } else if (role === 'filler'){
-                            name = this.createLorry(600, role);
                         } else{
                             if(num_of_creeps[role] === 0){
                                 max_energy/=2;
