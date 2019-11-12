@@ -1,7 +1,7 @@
 var roleMiner = {
     run: function(creep) {
         var source = Game.getObjectById(creep.memory.sourceId);
-        let linker = source.pos.findInRange(FIND_STRUCTURES,1,{
+        let linker = source.pos.findInRange(FIND_STRUCTURES,2,{
             filter: s => s.structureType === STRUCTURE_LINK
         })[0];
         let fill_linker = false;

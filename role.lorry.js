@@ -24,18 +24,19 @@ var roleLorry = {
             }
 
             if (!target) {
-                let container_target = creep.room.controller.pos.findInRange(FIND_STRUCTURES,5, {
-                        filter:(s) =>{
-                            return s.structureType === STRUCTURE_CONTAINER &&
-                                s.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
-                        }
-                    }
-                );
-                //console.log('find around ctrl container!'+container_target.length );
-                if(container_target.length > 0) {
-                    target = container_target[0];
-                }
-                else if(creep.room.storage){
+                // let container_target = creep.room.controller.pos.findInRange(FIND_STRUCTURES,5, {
+                //         filter:(s) =>{
+                //             return s.structureType === STRUCTURE_CONTAINER &&
+                //                 s.store.getFreeCapacity(RESOURCE_ENERGY) > 0;
+                //         }
+                //     }
+                // );
+                // //console.log('find around ctrl container!'+container_target.length );
+                // if(container_target.length > 0) {
+                //     target = container_target[0];
+                // }
+                // else
+                    if(creep.room.storage){
                     target = creep.room.storage;
                 }
             }
@@ -65,7 +66,6 @@ var roleLorry = {
                 }
                 return;
             }
-
 
             let container = creep.pos.findClosestByPath(FIND_STRUCTURES, {
                 filter: (s) =>{

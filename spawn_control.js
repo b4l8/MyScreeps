@@ -76,14 +76,14 @@ StructureSpawn.prototype.spawnControl =
                 }
             }
 
-            if (!name){
-                let linker_near_spawn = this.pos.findInRange(FIND_STRUCTURES,5,{
-                    filter: (s)=> s.structureType === STRUCTURE_LINK
-                });
-                if(linker_near_spawn.length > 0 && num_of_creeps['filler'] < 1){
-                    name = this.createLorry(600, 'filler');
-                }
-            }
+            // if (!name){
+            //     let linker_near_spawn = this.pos.findInRange(FIND_STRUCTURES,5,{
+            //         filter: (s)=> s.structureType === STRUCTURE_LINK
+            //     });
+            //     if(linker_near_spawn.length > 0 && num_of_creeps['filler'] < 1){
+            //         name = this.createLorry(600, 'filler');
+            //     }
+            // }
 
             if (!name) {
                 for (let role of list_of_roles) {
