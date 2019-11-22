@@ -1,49 +1,60 @@
-var roleUpgrader = require('Scripts/src/role/upgrader');
-var harvester = {
+'use strict';
 
-    /** @param {Creep} creep **/
-    run: function(creep) {
-        if(creep.memory.working && creep.carry.energy === 0){
-            creep.memory.working = false;
-        } else if (creep.memory.working === false && creep.carry.energy === creep.carryCapacity) {
-            creep.memory.working = true;
-        }
+/*
+ * harvester makes sure that extensions are filled
+ *
+ * Before storage or certains store threshold:
+ *  - get dropped energy or from source
+ *  - fill extensions
+ *  - build constructionSites
+ *  - upgrade Controller
+ *
+ * Proper storage store level:
+ *  - Move along the harvester path
+ *  - pathPos === 0 get energy from storage
+ *  - transfer energy to extensions in range
+ */
 
-        if(creep.memory.working) {
-            // if (creep.room.name !== creep.memory.home) {
-            //     var exit = creep.room.findExitTo(creep.memory.home);
-            //     // and move to exit
-            //     creep.moveTo(creep.pos.findClosestByRange(exit));
-            //     creep.say("back back");
-            //     return;
-            // }
-            var target = creep.pos.findClosestByPath(FIND_MY_STRUCTURES, {
-                filter: (structure) => {
-                    return (structure.structureType === STRUCTURE_EXTENSION ||
-                        structure.structureType === STRUCTURE_SPAWN ||
-                        structure.structureType === STRUCTURE_TOWER) &&
-                        structure.energy < structure.energyCapacity;
-                }
-            });
+roles.harvester = {};
 
-            if(!target) {
-                target = creep.room.storage;
-                // target = creep.pos.findClosestByPath(STRUCTURE_STORAGE);
-            }
-
-            if(target) {
-                if(creep.transfer(target, RESOURCE_ENERGY) === ERR_NOT_IN_RANGE) {
-                    creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'},reusePath: 10});
-                }
-            }
-            else {
-                roleUpgrader.run(creep);
-            }
-        }
-        else {
-            creep.getEnergy(true, true);
-        }
+roles.harvester.settings = {
+    param: ['controller.level', 'energyAvailable'],
+    layoutString: 'MWC',
+    amount: {
+        1: [2, 1, 1],
+    },
+    maxLayoutAmount: 6,
+};
+roles.harvester.updateSettings = function(room, creep) {
+    if (room.storage && room.storage.my && room.storage.store.energy > config.creep.energyFromStorageThreshold && room.energyAvailable > 350 && !room.memory.misplacedSpawn) {
+        return {
+            prefixString: 'WMC',
+            layoutString: 'MC',
+            amount: [1, 2],
+            maxLayoutAmount: 12,
+        };
+    } else if (room.storage && !room.storage.my) {
+        return {
+            maxLayoutAmount: 999,
+        };
     }
 };
 
-module.exports = harvester;
+roles.harvester.buildRoad = true;
+// roles.harvester.boostActions = ['capacity'];
+roles.harvester.action = function(creep) {
+    if (!creep.memory.routing.targetId) {
+        creep.memory.routing.targetId = 'harvester';
+    }
+
+    if (!creep.room.storage || !creep.room.storage.my || (creep.room.storage.store.energy + creep.carry.energy) < config.creep.energyFromStorageThreshold) {
+        creep.harvesterBeforeStorage();
+        creep.memory.routing.reached = false;
+        return true;
+    }
+
+    creep.memory.move_forward_direction = false;
+    creep.memory.routing.reverse = true;
+    delete creep.memory.routing.reached;
+    return true;
+};

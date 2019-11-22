@@ -308,7 +308,8 @@ Room.prototype.getPartConfig = function(creep) {
     // if (config.debug.spawn) {
     //     this.log('Spawning ' + creep.role + ' - - - Body: ' + JSON.stringify(prefix.parts) + ' - ' + maxRepeat + ' * ' + JSON.stringify(layout.parts) + ' - ' + JSON.stringify(sufix.parts) + ' - parts: ' + JSON.stringify(parts));
     // }
-    return config.creep.sortParts ? this.sortParts(parts, layout) : parts;
+    //return config.creep.sortParts ? this.sortParts(parts, layout) : parts;
+    return parts;
 };
 
 Room.prototype.getCreepConfig = function(creep) {
@@ -371,4 +372,22 @@ Room.prototype.spawnCreateCreep = function(creep) {
         return true;
     }
     return false;
+};
+
+/**
+ * get priority from config for a creep.
+ *
+ * @param  {Object} object the creep queue object
+ * @return {Number}        the priority for creep
+ */
+Room.prototype.getPriority = function(object) {
+    const priority = config.priorityQueue;
+    const target = object.routing && object.routing.targetRoom;
+    if (target === this.name) {
+        return priority.sameRoom[object.role] || 4;
+    } else if (target) {
+        return priority.otherRoom[object.role] || 20 + Game.map.getRoomLinearDistance(this.name, target);
+    } else {
+        return 19;
+    }
 };

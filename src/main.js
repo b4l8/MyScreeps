@@ -1,4 +1,6 @@
-var City = require('city');
+require('prototypes_packaged');
+require('logging');
+require('utils');
 
 global.tickLimit = global.cpuLimit();
 global.load = _.round(Game.cpu.getUsed());

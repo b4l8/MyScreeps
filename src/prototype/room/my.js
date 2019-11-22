@@ -77,7 +77,9 @@ Room.prototype.executeRoom = function() {
     //const building = nextroomers.length > 0 && this.energyCapacityAvailable <= 600;
     const building = this.energyCapacityAvailable <= 600;
     // harvester spawn logic
-    if (!building) {
+    if(building) {
+        // TODO 2: no nextroomer so use harvester
+    //if (!building) {
         // TODO 0: check this logic
         const amount = this.getHarvesterAmount();
         this.checkRoleToSpawn('harvester', amount);
@@ -210,8 +212,8 @@ Room.prototype.executeRoom = function() {
     if (this.controller.level > 1) {
         this.checkRoleToSpawn('repairer');
     }
-
-    this.handleLinks();
+    // TODO -1: has bug. shall be done!!
+    //this.handleLinks();
     // TODO 3: finish these structures!!
     //this.handleObserver();
     //this.handlePowerSpawn();
@@ -332,15 +334,15 @@ Room.prototype.spawnCheckForCreate = function() {
         this.memory.queue.shift();
         return true;
     }
-    // TODO 2: figure out what it mean
-    // if (creep.ttl === 0) {
-    //     this.log('TTL reached, skipping: ' + JSON.stringify(_.omit(creep, ['level'])));
-    //     this.memory.queue.shift();
-    //     return false;
-    // }
-    // creep.ttl = creep.ttl || config.creep.queueTtl;
-    // if (this.getSpawnableSpawns().length === 0) {
-    //     creep.ttl--;
-    // }
+    // queue time out
+    if (creep.ttl === 0) {
+        this.log('TTL reached, skipping: ' + JSON.stringify(_.omit(creep, ['level'])));
+        this.memory.queue.shift();
+        return false;
+    }
+    creep.ttl = creep.ttl || config.creep.queueTtl;
+    if (this.getSpawnableSpawns().length === 0) {
+        creep.ttl--;
+    }
     return false;
 };

@@ -52,9 +52,10 @@ Creep.prototype.handle = function() {
         //     return true;
         // }
 
-        if (this.memory.routing && this.memory.routing.reached) {
+        // TODO 2: path finder
+        //if (this.memory.routing && this.memory.routing.reached) {
             return this.unit().action(this);
-        }
+        //}
 
         // TODO 2: path finder
         // if (this.followPath(this.unit().action)) {
@@ -88,4 +89,23 @@ Creep.prototype.handle = function() {
             };
         }
     }
+};
+
+Creep.prototype.setNextSpawn = function() {
+    if (!this.memory.nextSpawn) {
+        this.memory.nextSpawn = Game.time - this.memory.born - config.creep.renewOffset;
+
+        if (this.ticksToLive < this.memory.nextSpawn) {
+            this.respawnMe();
+        }
+    }
+};
+
+/**
+ * inBase - Checks if the creep is in its base
+ *
+ * @return {boolean} If creep is in its base
+ **/
+Creep.prototype.inBase = function() {
+    return this.room.name === this.memory.base;
 };

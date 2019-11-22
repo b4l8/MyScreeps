@@ -50,4 +50,23 @@ global.utils = {
         const creepsToKill = _.filter(Game.creeps, (c) => c.memory.base === room.name);
         room.log('creepsToKill', _.size(creepsToKill), _.map(creepsToKill, (c) => c.suicide()));
     },
+    levelToSendNext: function(baseRoom, parts) {
+        let factor = 0;
+        if (baseRoom.controller.level === 3) {
+            factor = 10;
+        }
+        if (baseRoom.controller.level === 4) {
+            factor = 5;
+        }
+        if (baseRoom.controller.level === 5) {
+            factor = 4;
+        }
+        if (baseRoom.controller.level === 6 || baseRoom.controller.level === 7) {
+            factor = 3;
+        }
+        if (baseRoom.controller.level === 8) {
+            factor = 1;
+        }
+        return factor * parts.carryParts.carry * CARRY_CAPACITY;
+    },
 };

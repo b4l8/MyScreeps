@@ -3,4 +3,4 @@ node_modules
 package-lock.json
 package.json
 提交代码到服务器.bat
-Gruntfile.js
+release

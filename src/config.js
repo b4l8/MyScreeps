@@ -12,7 +12,7 @@ global.cache = {
 
 global.config = {
     stats:{
-        enbaled: true,
+        enabled: true,
         summary: false,
     },
 
@@ -64,8 +64,8 @@ global.config = {
     },
 
     creep: {
-        //renewOffset: 0,
-        //queueTtl: 100,
+        renewOffset: 0,
+        queueTtl: 100,
         //structurer: true,
         //structurerInterval: 1500,
         //structurerMinEnergy: 1300,
@@ -108,7 +108,7 @@ global.config = {
         enabled: true,
         // see roomExecution for detail
         randomExecution: false,
-        executeAll: 10,
+        executeAll: 1,
         lowExecution: 0.5,
     },
 

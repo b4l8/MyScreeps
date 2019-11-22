@@ -1,3 +1,4 @@
+/* TODO 10 : this is reall good idea . can use?
 RoomPosition.prototype.getLink = function (range = 2) {
     if (this.__link) {
         return this.__link
@@ -14,3 +15,4 @@ RoomPosition.prototype.getLink = function (range = 2) {
     this.__link = links[0];
     return this.__link
 };
+*/

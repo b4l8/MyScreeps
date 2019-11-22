@@ -34,3 +34,5 @@ Room.prototype.exectueEveryTicks = function(ticks) {
     }
     return exectue;
 };
+
+Room.structureHasEnergy = (structure) => structure.store && structure.store.energy || structure.energy;
